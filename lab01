@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
+
+using namespace std;
+class Student
+{
+    std::string name;
+    std::string surname;
+    std::vector<float> grades;
+    int index_;
+    float final_grade;
+public:
+    Student(string n, string s = "place_holder")
+    {
+        name = n;
+        surname = s;
+    }
+    Student(string n)
+    {
+        name = n;
+    }
+    Student(int n)
+    {
+
+    }
+    string get_name()
+    {
+        return name;
+    }
+    // ~Student()
+    // {
+    //     cout << "object byby" << endl;
+    // }
+    void calculate_grade(){
+    float sum = std::accumulate(grades.begin(), grades.end(), 0.0f);
+    final_grade = sum / grades.size();
+}
+
+    void set_index(int index){
+        index_=index;
+    }
+    int index(){
+        return index_;
+    }
+
+
+void print()
+{
+    cout << name <<" "<< surname <<"" ;
+    for (auto g : grades)
+    {
+        cout << g << ",";
+    }
+    cout << endl;
+};
+bool add_grade(float grade) {
+    if (grade >= 2.0 && grade <= 5.0) {
+        grades.push_back(grade);
+        return true;
+    }
+    return false;
+};
+void set_name(string n)
+{
+    name = n;
+}
+float get_final_grade() {
+    return final_grade;
+}
+};
+int main()
+{
+    Student student("ada","dadsa");    //{"adam", "ja", {5.0,4.0,3.0,2.0}};
+    for(int i = 0; i < 10; i++)
+    {
+        student.add_grade(i);
+    }
+    student.calculate_grade();
+    student.print();
+    student.calculate_grade();
+    std::cout << "av: " << student.get_final_grade() << std::endl;
+    return 0;
+}
