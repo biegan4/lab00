@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <numeric>
+#include <iomanip>
+#include <string>
+
 
 using namespace std;
 class Student
@@ -68,17 +71,8 @@ void set_name(string n)
 float get_final_grade() {
     return final_grade;
 }
-};
-int main()
-{
-    Student student("ada","dadsa");    //{"adam", "ja", {5.0,4.0,3.0,2.0}};
-    for(int i = 0; i < 10; i++)
-    {
-        student.add_grade(i);
-    }
-    student.calculate_grade();
-    student.print();
-    student.calculate_grade();
-    std::cout << "av: " << student.get_final_grade() << std::endl;
-    return 0;
+void display() {
+    cout << "Student: " << name << " " << surname << " (Album: " << index_ << ")\n";
+    cout << "Grades: ";
 }
+};
