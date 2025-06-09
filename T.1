@@ -1,0 +1,157 @@
+// #include <iostream>
+// #include <vector>
+// #include <memory>
+// #include <string>
+
+// class ElectronicDevices{
+// protected:
+//     std::string brand;
+//     std::string model;
+// public:
+//     ElectronicDevices(std::string brand, std::string model)
+//         :brand(brand), model(model) {}
+//         void virtual display(){
+//             std::cout<<brand<<model<<std::endl;
+//     }
+//         virtual ~ElectronicDevices(){}
+// };
+// class Smartwatch : public ElectronicDevices{
+// protected:
+//     bool hasGPS;
+// public:
+//     Smartwatch(std::string brand, std::string model, bool hasGPS)
+//         :ElectronicDevices(brand,model), hasGPS(hasGPS){}
+//     void display(){
+//         ElectronicDevices::display();
+//         std::cout<<hasGPS<<std::endl;
+//     }
+// };
+// class Smartphone : public ElectronicDevices{
+// protected:
+//     int storageCapacity;
+// public:
+//     Smartphone(std::string brand, std::string model, int storageCapacity)
+//         :ElectronicDevices(brand, model), storageCapacity(storageCapacity){}
+//     void display(){
+//         ElectronicDevices::display();
+//         std::cout<<storageCapacity<<std::endl;
+//     }
+// };
+// class Laptop : public ElectronicDevices{
+// protected:
+//     int ramSize;
+// public:
+//     Laptop(std::string brand, std::string model, int ramSize)
+//         :ElectronicDevices(brand, model), ramSize(ramSize){}
+//     void display(){
+//         ElectronicDevices::display();
+//         std::cout<<ramSize<<std::endl;
+//     }
+// };
+// class GamingLaptop : public Laptop{
+// protected:
+//     std::string GPUmodel;
+// public:
+//     GamingLaptop(std::string brand, std::string model, int ramSize, std::string GPUmodel)
+//         :Laptop(brand, model, ramSize), GPUmodel(GPUmodel){}
+//     void display(){
+//         Laptop::display();
+//         std::cout<<GPUmodel<<std::endl;
+//     }
+// };
+// class Store{
+// private:
+//     std::vector<std::unique_ptr<ElectronicDevices>> devices;
+// public:
+//     void addDevice(std::unique_ptr<ElectronicDevices> device){
+//         devices.push_back(std::move(device));
+//     }
+//     void displayDevices(){
+//         for (const auto& device : devices){
+//             device->display();
+//         }
+//     }
+// };
+// int main(){
+//     Store store;
+//     auto smartwatch = std::make_unique<Smartwatch>("sad","sda",true);
+//     auto smartphone = std::make_unique<Smartphone>("sda","dsa",987);
+//     auto laptop = std::make_unique<Laptop>("das","ads",654);
+//     auto laptop2 = std::make_unique<Laptop>("dsa","sda",564);
+//     auto gaminglaptop = std::make_unique<GamingLaptop>("sda","das",645,"das");
+//     store.addDevice(std::move(smartwatch));
+//     store.addDevice(std::move(smartphone));
+//     store.addDevice(std::move(laptop));
+//     store.addDevice(std::move(laptop2));
+//     store.addDevice(std::move(gaminglaptop));
+//     store.displayDevices();
+//     return 0;
+// };
+#include <iostream>
+
+class Time {
+public:
+    Time(int hours = 0, int minutes = 0, int seconds = 0)
+        : hours(hours), minutes(minutes), seconds(seconds) {}
+
+    Time operator+(const Time& t) const {
+        Time t1 = normalized();
+        Time t2 = t.normalized();
+        return Time(t1.hours + t2.hours, t1.minutes + t2.minutes, t1.seconds + t2.seconds).normalized();
+    }
+
+    Time operator-(const Time& t) const {
+        Time t1 = normalized();
+        Time t2 = t.normalized();
+        return Time(t1.hours - t2.hours, t1.minutes - t2.minutes, t1.seconds - t2.seconds).normalized();
+    }
+
+    bool operator==(const Time& t) const {
+        Time t1 = normalized();
+        Time t2 = t.normalized();
+        return (t1.hours == t2.hours && t1.minutes == t2.minutes && t1.seconds == t2.seconds);
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Time& t) {
+        Time norm = t.normalized();
+        os << norm.hours << ":";
+        if (norm.minutes < 10) os << "0";
+        os << norm.minutes << ":";
+        if (norm.seconds < 10) os << "0";
+        os << norm.seconds;
+        return os;
+    }
+
+private:
+    int hours, minutes, seconds;
+
+    Time normalized() const {
+        long total_seconds = static_cast<long>(hours) * 3600 + static_cast<long>(minutes) * 60 + static_cast<long>(seconds);
+        if (total_seconds < 0) {
+            total_seconds = 0;
+        }
+        int h = total_seconds / 3600;
+        int remaining = total_seconds % 3600;
+        int m = remaining / 60;
+        int s = remaining % 60;
+        return Time(h, m, s);
+    }
+};
+int main() {
+    Time time1(3, 15, 45);
+    Time time2(1, 50, 30);
+
+    std::cout << "Time 1: " << time1 << std::endl;
+    std::cout << "Time 2: " << time2 << std::endl;
+
+    Time sum = time1 + time2;
+    std::cout << "Sum: " << sum << std::endl;
+
+    Time difference = time1 - time2;
+    std::cout << "Difference: " << difference << std::endl;
+
+    bool areEqual = time1 == time2;
+    std::cout << "Are equal? " << (areEqual ? "Yes" : "No") << std::endl;
+
+    return 0;
+}
